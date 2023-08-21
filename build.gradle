@@ -36,6 +36,51 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+jar {
+	enabled = true
+	archiveClassifier.set("")
+
+	manifest {
+		attributes('Impementation-Title': project.name, 'Implementation-Version': project.version)
+	}
+}
+
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	}
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = 'co.hong.libs'
+			artifactId = 'lib-utils'
+			version = project.version
+			artifact sourceJar
+			from components.java
+
+			pom.withXml {
+				def repositories = asNode().appendNode('repositories')
+
+				def repo_jitpack = repositories.appendNode('repository')
+				repo_jitpack.appendNode('id', 'jitpack.io')
+				repo_jitpack.appendNode('url', 'https://jitpack.io')
+
+				def repo_jcenter = repositories.appendNode('repository')
+				repo_jcenter.appendNode('snapshots').appendNode('enabled', 'false')
+				repo_jcenter.appendNode('id', 'jcenter')
+				repo_jcenter.appendNode('url', 'https://jcenter.bintray.com/')
+
+				def repo_mavenCentral = repositories.appendNode('repository')
+				repo_mavenCentral.appendNode('snapshots').appendNode('enabled', 'false')
+				repo_mavenCentral.appendNode('id', 'mavenCentral')
+				repo_mavenCentral.appendNode('url', 'https://repo1.maven.org/maven2')
+			}
+		}
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
