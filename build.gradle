@@ -2,6 +2,8 @@ plugins {
     id 'java'
     id 'java-library'
     id 'maven-publish'
+    id "io.freefair.lombok" version "8.1.0"
+    id 'jacoco'
 }
 
 group = 'co.hong.libs'
@@ -18,6 +20,7 @@ repositories {
 }
 
 def jacksonVersion = '2.15.1'
+def junitVersion = '5.9.2'
 dependencies {
 
     // Jackson Dependencies
@@ -26,10 +29,27 @@ dependencies {
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Lombok features
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Test Features
+    testImplementation 'ch.qos.logback:logback-classic:1.4.7'
+    testImplementation 'org.springframework:spring-test:6.0.6'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+    reports {
+        xml.required = true
+    }
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 java {
