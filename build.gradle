@@ -9,10 +9,6 @@ plugins {
 group = 'co.hong.libs'
 version = '0.0.1'
 
-java {
-    sourceCompatibility = '17'
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -38,6 +34,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 jar {
     enabled = true
     archiveClassifier.set("")
@@ -47,9 +49,10 @@ jar {
     }
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
     }
 }
 
@@ -57,7 +60,15 @@ task sourceJar(type: Jar) {
     archiveClassifier = "sources"
 }
 
+
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/hong9Lee/lib-utils")
+        }
+    }
+
 	publications {
 		maven(MavenPublication) {
 			groupId = 'co.hong.libs'
