@@ -1,5 +1,6 @@
 package co.hong.libs.json;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,6 +34,20 @@ public class JsonUtil {
         } catch (IOException e) {
             // json parameter가 null 이거나 유효하지 않아서 JSON 파싱이 실패할 경우, 발생
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 주어진 객체에 대한 JSON 문자열을 얻는다.
+     *
+     * @param o
+     * @return
+     */
+    public static String getJson(Object o) {
+        try {
+            return om.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            return null;
         }
     }
 }
