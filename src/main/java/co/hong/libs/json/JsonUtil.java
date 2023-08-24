@@ -20,6 +20,12 @@ public class JsonUtil {
         MAP_TYPE_REFERENCE = new TypeReference<>() {
         };
     }
+
+    /**
+     * JSON을 Map 형식으로 얻는다. 파싱에 실패하면 null을 반환한다.
+     * @param json
+     * @return
+     */
     public static Map<String, Object> parseAsMapQuietly(final String json) {
         try {
             return parseAsMap(json);
@@ -28,6 +34,11 @@ public class JsonUtil {
         }
     }
 
+    /**
+     * * JSON을 Map 형식으로 얻는다. 파싱에 실패하면 예외가 발생한다.
+     * @param json
+     * @return
+     */
     public static Map<String, Object> parseAsMap(final String json) {
         try {
             return om.readValue(json, MAP_TYPE_REFERENCE);
